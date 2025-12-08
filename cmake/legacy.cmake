@@ -235,6 +235,7 @@ ExternalProject_Add(zeromq
     "-DZMQ_BUILD_TESTS=ON"
     "-DENABLE_CPACK=OFF"
     "-DENABLE_DRAFTS=ON"
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
   ${LOG_TO_FILE}
   ${DEPENDS_ON_SOURCE_CACHE}
 )
@@ -267,7 +268,9 @@ ExternalProject_Add(pythia6
   URL_HASH SHA256=b14e82870d3aa33d6fa07f4b1f4d17f1ab80a37d753f91ca6322352b397cb244
   UPDATE_DISCONNECTED ON
   PATCH_COMMAND ${patch} -p1 -i "${CMAKE_SOURCE_DIR}/legacy/pythia6/add_missing_extern_keyword.patch"
-  ${CMAKE_DEFAULT_ARGS} ${LOG_TO_FILE}
+  ${CMAKE_DEFAULT_ARGS} CMAKE_ARGS
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+  ${LOG_TO_FILE}
   ${DEPENDS_ON_SOURCE_CACHE}
 )
 
@@ -279,6 +282,7 @@ ExternalProject_Add(hepmc
   ${CMAKE_DEFAULT_ARGS} CMAKE_ARGS
     "-Dlength:STRING=CM"
     "-Dmomentum:STRING=GEV"
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
   ${LOG_TO_FILE}
   ${DEPENDS_ON_SOURCE_CACHE}
 )
@@ -288,7 +292,9 @@ set(vc_version "1.4.4")
 ExternalProject_Add(vc
   URL https://github.com/VcDevel/Vc/archive/refs/tags/${vc_version}.tar.gz
   URL_HASH SHA256=5933108196be44c41613884cd56305df320263981fe6a49e648aebb3354d57f3
-  ${CMAKE_DEFAULT_ARGS} ${LOG_TO_FILE}
+  ${CMAKE_DEFAULT_ARGS} CMAKE_ARGS
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+  ${LOG_TO_FILE}
   ${DEPENDS_ON_SOURCE_CACHE}
 )
 
@@ -430,7 +436,9 @@ list(APPEND packages vmc)
 set(vmc_version "2-0")
 ExternalProject_Add(vmc
   GIT_REPOSITORY https://github.com/vmc-project/vmc GIT_TAG v${vmc_version}
-  ${CMAKE_DEFAULT_ARGS} ${LOG_TO_FILE}
+  ${CMAKE_DEFAULT_ARGS} CMAKE_ARGS
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+  ${LOG_TO_FILE}
   DEPENDS root ${extract_source_cache_target}
 )
 
@@ -464,6 +472,7 @@ ExternalProject_Add(geant4_vmc
     "-DGeant4VMC_USE_GEANT4_VIS=OFF"
     "-DGeant4VMC_USE_GEANT4_G3TOG4=ON"
     "-DWITH_TEST=OFF"
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
   DEPENDS clhep geant4 root vgm vmc ${extract_source_cache_target}
   ${LOG_TO_FILE}
 )
