@@ -33,9 +33,9 @@ git clone -b <release> https://github.com/FairRootGroup/FairSoft
 ```
 
 For `<release>` choose
-* `jan24`, or `nov22p1`, ... - a particular release
-* `jan24_patches` - always points to the latest patch release for the `nov22` release
-* `master` - track the latest stable release (e.g. if `jan24` is the latest release `master` is the same as `jan24_patches`)
+* `feb26`, or `jan24p6`, ... - a particular release
+* `feb26_patches` - always points to the latest patch release for the `feb26` release
+* `master` - track the latest stable release (e.g. if `feb26` is the latest release `master` is the same as `feb26_patches`)
 * `dev` - the bleeding edge development version
 
 Discover releases here: https://github.com/FairRootGroup/FairSoft/releases
@@ -50,6 +50,41 @@ cmake -S <path-to-source> -B <path-to-build> -C <path-to-source>/FairSoftConfig.
 * `<path-to-build>` is a temporary directory of your choice where all of the package download, extraction, and building happens
 
 Set the installation prefix and more customization options in the [`FairSoftConfig.cmake`](../FairSoftConfig.cmake) file itself.
+
+#### 3.1 CMake configure step for macOS users
+
+There are some known problems about the compilation of FairSoft on macOS.
+
+The first two problems are related to the version of the **patch** and **make**
+commands on macOS.
+
+The **patch** command does not support the needed parameters,
+so one needs to install a version of the **patch** command with brew.
+The **make** command doesn't properly support the jobsserver which allows
+parallel builds of all the packages contained in FairSoft which slows down
+the installation enormously. The version provided by brew fixes the problem.
+Both packages are already added in the updated setup script for macOS.
+If found the packages from the homebrew installation directory will be used.
+
+The last problem is related to the macOS, compiler and SDK versions, such
+that it depends on the personal setup. As described in more detail at
+[macOS SDK](advanced.md#macos-sdk)! ROOT is very picky about the compiler
+and the connected SDK. Compiling older ROOT versions with newer compilers
+may need using an older SDK version. If not specified explicitly the
+latest SDK version is used. To use an older SDK version one needs to add the
+following parameter when running CMake
+
+```
+-DCMAKE_OSX_SYSROOT=<full path to SDK directory>
+```
+
+e.g. for Apple Clang 17 on macOS 15 or Apple Clang 16 on macOS 14
+
+```
+-DCMAKE_OSX_SYSROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk
+```
+
+More information can be found at
 
 **macOS users**: Notice [macOS SDK](advanced.md#macos-sdk)!
 
@@ -84,40 +119,50 @@ please contact us.
 
 | **OS Name** | **Arch** | **OS Version** | **Compiler** | **CMake** |
 | --- | --- | --- | --- | --- |
-| Almalinux  | x86_64 | 9     | GCC 11.4.1                 | 3.27.4 (`bootstrap-cmake.sh`) |
-| Debian     | x86_64 | 10    | GCC 8.3.0                  | 3.27.4 (`bootstrap-cmake.sh`) |
-| Debian     | x86_64 | 11    | GCC 10.2.1                 | 3.27.4 (`bootstrap-cmake.sh`) |
-| Debian     | x86_64 | 12    | GCC 12.2.0                 | 3.25.1 |
-| Fedora     | x86_64 | 37    | GCC 12.3.1                 | 3.27.7 |
-| Fedora     | x86_64 | 38    | GCC 13.2.1                 | 3.27.7 |
-| Fedora     | x86_64 | 39    | GCC 13.2.1                 | 3.27.7 |
-| macOS      | x86_64 | 14    | AppleClang 16, gfortran 14 | 3.31.0 (brew) |
-| macOS      | x86_64 | 15    | AppleClang 16, gfortran 14 | 3.31.0 (brew) |
-| macOS      | arm64  | 15    | AppleClang 16, gfortran 14 | 3.31.0 (brew) |
-| Ubuntu     | x86_64 | 22.04 | GCC 11.4.0                 | 3.22.1 |
-| Ubuntu     | x86_64 | 24.04 | GCC 13.2.0                 | 3.28.3 |
+| Debian     | x86_64 | 12    | GCC 12.2.0                             | 3.25.1 |
+| Debian     | x86_64 | 12    | GCC 12.2.0                             | 4.2.3 (bootstrap) |
+| Debian     | x86_64 | 13    | GCC 14.2.0                             | 3.31.6 |
+| Fedora     | x86_64 | 38    | GCC 13.2.1                             | 3.27.7 |
+| Fedora     | x86_64 | 38    | GCC 13.2.1                             | 4.2.3 (bootstrap) |
+| Fedora     | x86_64 | 40    | GCC 14.2.1                             | 3.30.8 |
+| Fedora     | x86_64 | 42    | GCC 15.2.1                             | 3.31.6 |
+| Fedora     | x86_64 | 43    | GCC 15.2.1                             | 3.31.10 |
+| macOS      | x86_64 | 15    | SDK 26, AppleClang 17, gfortran 15.2.0 | 4.2.0 (brew) |
+| macOS      | arm64  | 26    | SDK 26, AppleClang 17, gfortran 15.2.0 | 4.2.3 (brew) |
+| macOS      | arm64  | 26    | SDK 14, AppleClang 17, gfortran 15.2.0 | 4.2.3 (brew) |
+| OpenSuse   | x86_64 | 15.6  | GCC 14.3.0 (non system)                | 3.28.3 |
+| OpenSuse   | x86_64 | 16.0  | GCC 15.1.1                             | 3.31.7 |
+| Ubuntu     | x86_64 | 22.04 | GCC 11.4.0                             | 4.2.3 (bootstrap) |
+| Ubuntu     | x86_64 | 24.04 | GCC 13.3.0                             | 3.28.3 |
+| Ubuntu     | x86_64 | 26.04 | GCC 15.2.0                             | 3.31.6 |
 
 ## Included packages
 
 | **Package** | **Version** | **URL** |
 | --- | --- | --- |
-| boost            | 1.83.0       | https://www.boost.org/ |
-| clhep            | 2.4.7.1      | http://proj-clhep.web.cern.ch |
-| dds              | 3.8          | http://dds.gsi.de |
+| boost            | 1.90.0       | https://www.boost.org/ |
+| clhep            | 2.4.7.2      | http://proj-clhep.web.cern.ch |
+| dds              | 3.16         | http://dds.gsi.de |
 | faircmakemodules | 1.0.0        | https://github.com/FairRootGroup/FairCMakeModules |
-| fairlogger       | 1.11.1       | https://github.com/FairRootGroup/FairLogger |
-| fairmq           | 1.8.4        | https://github.com/FairRootGroup/FairMQ |
-| flatbuffers      | 23.5.26      | https://github.com/google/flatbuffers |
-| fmt              | 10.1.1       | https://github.com/fmtlib/fmt |
-| geant3           | 4-2_fairsoft | https://github.com/FairRootGroup/geant3 |
-| geant4           | 11.2.0       | https://geant4.web.cern.ch |
-| geant4_vmc       | 6-5          | https://github.com/vmc-project/geant4_vmc |
+| fairlogger       | 2.3.1        | https://github.com/FairRootGroup/FairLogger |
+| fairmq           | 1.10.1       | https://github.com/FairRootGroup/FairMQ |
+| flatbuffers      | 25.12.19     | https://github.com/google/flatbuffers |
+| fmt              | 12.1.0       | https://github.com/fmtlib/fmt |
+| geant3           | 4-5_fairsoft | https://github.com/FairRootGroup/geant3 |
+| geant4           | 11.4.0       | https://geant4.web.cern.ch |
+| geant4_vmc       | 6-8          | https://github.com/vmc-project/geant4_vmc |
 | hepmc            | 2.06.11      | http://hepmc.web.cern.ch |
-| onnxruntime      | 1.12.1       | https://github.com/microsoft/onnxruntime |
-| pythia6          | 428-alice1   | https://github.com/alisw/pythia6 |
-| pythia8          | 8310         | https://pythia.org/ |
-| root             | 6.30.08      | https://root.cern |
-| vc               | 1.4.4        | https://github.com/VcDevel/Vc |
-| vgm              | 5-2          | https://github.com/vmc-project/vgm |
-| vmc              | 2-0          | https://github.com/vmc-project/vmc |
+| onnxruntime      | 1.24.1       | https://github.com/microsoft/onnxruntime |
+| pythia8          | 8317         | https://pythia.org/ |
+| root             | 6.36.08      | https://root.cern |
+| vc               | 1.4.5        | https://github.com/VcDevel/Vc |
+| vecgeom          | 2.0.0        | https://gitlab.cern.ch/VecGeom/VecGeom |
+| vgm              | 5-4          | https://github.com/vmc-project/vgm |
+| vmc              | 2-1          | https://github.com/vmc-project/vmc |
 | zeromq           | 4.3.5        | https://github.com/zeromq/libzmq |
+
+ 
+The additional packages **onnxruntime** and **dds** can't be compiled with
+the standard CMake versions of Debian 12 and Fedora 38. A newer CMake version
+can be installed using the script legacy/bootstrap-cmake.sh which is part
+of the repository.

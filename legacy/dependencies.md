@@ -16,7 +16,7 @@ let us discuss a solution together.
 If your system does not provide the required CMake version, you may run
 
 ```
-<path-to-source>/bootstrap-cmake.sh <install-dir>
+<path-to-source>/legacy/bootstrap-cmake.sh <install-dir>
 export PATH=<install-dir>/bin:$PATH
 ```
 
